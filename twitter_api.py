@@ -1,20 +1,20 @@
 import tweepy
-import credentials as c
+import os
 import datos_ripio as d
 import ripio_api as r
 import time
 
 def create_api():
-    auth = tweepy.OAuthHandler(c.API_KEY, c.API_SECRECT_KEY)
-    auth.set_access_token(c.ACCESS_TOKEN, c.ACCESS_SECRET)
+    auth = tweepy.OAuthHandler(os.environ.get('API_KEY'), os.environ.get('API_SECRECT_KEY'))
+    auth.set_access_token(os.environ.get('ACCESS_TOKEN'), os.environ.get('ACCESS_SECRET'))
     api = tweepy.API(auth)
     try:
         api.verify_credentials()
     except Exception as e:
-        print(f'Error asl crear la API: {e}')
+        print(f'Error al crear la API: {e}')
     return api
     
-def tweetear(mensaje, api):
+def twittear(mensaje, api):
     try:
         api.update_status(mensaje)
     except Exception as e:
@@ -24,5 +24,5 @@ if  __name__ == '__main__':
     api = create_api()
     while True:
         mensaje = r.precios(d.URL_BASE)
-        tweetear(mensaje, api)
-        time.sleep(120)
+        twittear(mensaje, api)
+        time.sleep(60*30)
