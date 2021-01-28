@@ -17,8 +17,12 @@ def create_api():
 def twittear(mensaje, api):
     try:
         api.update_status(mensaje)
-    except Exception as e:
-        print(f'Error al enviar el Tweet: {e}')
+    except tweepy.TweepError as e:
+        error = str(e)
+        if '187' in error: #Status is duplicate        
+            api.update_status(mensaje+'\nD')
+        else:
+            print(f'Error al enviar el Tweet: {e}')
 
 if  __name__ == '__main__':
     api = create_api()
